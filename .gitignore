@@ -1,5 +1,6 @@
 # App files and folders
 .env
+coverage
 storage
 
 # OS and IDE files and folders
