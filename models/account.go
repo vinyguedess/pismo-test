@@ -1,6 +1,6 @@
 package models
 
 type Account struct {
-	*BaseModel
+	BaseModel
 	DocumentNumber string `json:"document_number" gorm:"unique;not null"`
 }
