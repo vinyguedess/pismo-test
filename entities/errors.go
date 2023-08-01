@@ -9,6 +9,13 @@ func (e *baseErrors) Error() string {
 	return e.Message
 }
 
+func NewError(message string, details []string) error {
+	return &baseErrors{
+		Message: message,
+		Details: details,
+	}
+}
+
 type AccountAlreadyExistsError struct {
 	*baseErrors
 }
