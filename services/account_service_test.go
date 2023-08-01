@@ -100,3 +100,52 @@ func (s *accountServiceTestSuite) TestCreate() {
 		})
 	}
 }
+
+func (s *accountServiceTestSuite) TestFindByID() {
+	accountId := uuid.New()
+	account := &models.Account{
+		BaseModel: models.BaseModel{ID: accountId},
+	}
+
+	tests := []struct {
+		description      string
+		responseFindById *models.Account
+		errFindById      error
+	}{
+		{
+			description:      "Success",
+			responseFindById: account,
+		},
+		{
+			description: "Account not found",
+		},
+		{
+			description: "Error finding by ID",
+			errFindById: errors.New("error finding by ID"),
+		},
+	}
+
+	for _, test := range tests {
+		s.Run(test.description, func() {
+			s.SetupTest()
+
+			ctx := context.Background()
+
+			s.accountRepositoryMock.EXPECT().
+				FindByID(ctx, accountId.String()).
+				Return(test.responseFindById, test.errFindById)
+
+			account, err := s.service.FindByID(ctx, accountId.String())
+			if test.errFindById != nil {
+				s.Error(err)
+				s.ErrorContains(err, test.errFindById.Error())
+			} else if test.responseFindById == nil {
+				s.Error(err)
+				s.ErrorContains(err, "Account not found")
+			} else {
+				s.NoError(err)
+				s.Equal(test.responseFindById, account)
+			}
+		})
+	}
+}

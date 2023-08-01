@@ -10,6 +10,7 @@ import (
 
 type AccountService interface {
 	Create(ctx context.Context, data models.Account) (*models.Account, error)
+	FindByID(ctx context.Context, accountId string) (*models.Account, error)
 }
 
 type accountService struct {
@@ -31,4 +32,15 @@ func (s *accountService) Create(ctx context.Context, data models.Account) (*mode
 	}
 
 	return s.accountRepository.Create(ctx, data)
+}
+
+func (s *accountService) FindByID(ctx context.Context, accountId string) (*models.Account, error) {
+	account, err := s.accountRepository.FindByID(ctx, accountId)
+	if err != nil {
+		return nil, err
+	} else if account == nil {
+		return nil, entities.NewItemNotFoundError("Account", accountId)
+	}
+
+	return account, nil
 }

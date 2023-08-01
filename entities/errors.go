@@ -1,5 +1,7 @@
 package entities
 
+import "fmt"
+
 type baseErrors struct {
 	Message string   `json:"message"`
 	Details []string `json:"details"`
@@ -16,9 +18,7 @@ func NewError(message string, details []string) error {
 	}
 }
 
-type AccountAlreadyExistsError struct {
-	*baseErrors
-}
+type AccountAlreadyExistsError struct{ *baseErrors }
 
 func NewAccountAlreadyExistsError(
 	documentNumber string,
@@ -27,6 +27,19 @@ func NewAccountAlreadyExistsError(
 		baseErrors: &baseErrors{
 			Message: "Account already exists",
 			Details: []string{documentNumber},
+		},
+	}
+}
+
+type ItemNotFoundError struct{ *baseErrors }
+
+func NewItemNotFoundError(
+	item string, id string,
+) *ItemNotFoundError {
+	return &ItemNotFoundError{
+		baseErrors: &baseErrors{
+			Message: fmt.Sprintf("%s not found", item),
+			Details: []string{item, id},
 		},
 	}
 }
