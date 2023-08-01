@@ -12,6 +12,7 @@ pre-test:
 
 pre-test-build:
 	rm -rf mocks
+	mockgen -source=./repositories/account_repository.go -destination=./mocks/repositories/account_repository.go
 
 test:
 	make pre-test
