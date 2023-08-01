@@ -4,15 +4,17 @@ import (
 	"context"
 	"net"
 	"net/http"
-	"pismo/handlers"
-	"pismo/repositories"
-	"pismo/services"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 	"go.uber.org/zap"
+
+	"pismo/handlers"
+	"pismo/repositories"
+	"pismo/services"
 )
 
 func main() {
@@ -73,6 +75,20 @@ func NewHTTPServer(lc fx.Lifecycle, mux *mux.Router, log *zap.Logger) *http.Serv
 
 func NewServeMux(handlers []handlers.Handler) *mux.Router {
 	mux := mux.NewRouter()
+
+	mux.PathPrefix("/static/").Handler(
+		http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))),
+	)
+
+	mux.PathPrefix("/swagger/").Handler(
+		httpSwagger.Handler(
+			httpSwagger.URL("/static/doc.json"),
+			httpSwagger.DeepLinking(true),
+			httpSwagger.DocExpansion("none"),
+			httpSwagger.DomID("swagger-ui"),
+		),
+	).Methods(http.MethodGet)
+
 	for _, h := range handlers {
 		mux.Handle(h.Route(), h).Methods(h.Method()...)
 	}

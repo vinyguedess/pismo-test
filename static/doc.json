@@ -1,0 +1,103 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Pismo Test API",
+        "description": "This is the documentation for Pismo Test API.",
+        "contact": {
+            "name": "Vinicius Guedes",
+            "url": "https://github.com/pismo-test",
+            "email": "viniciusgued@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/accounts": {
+            "post": {
+                "summary": "Create account",
+                "description": "Create account if it does not exist",
+                "tags": ["Accounts"],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/CreateAccountPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created account",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Created account ID"
+                            },
+                            "Location": {
+                                "type": "string",
+                                "description": "Created account URL"
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Account already exists",
+                        "$ref": "#/responses/ConflictError"
+                    },
+                    "422": {
+                        "$ref": "#/responses/UnprocessableEntityError"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "CreateAccountPayload": {
+            "type": "object",
+            "properties": {
+                "document_number": {
+                    "type": "string"
+                }
+            },
+            "required": ["document_number"]
+        }
+    },
+    "responses": {
+        "ConflictError": {
+            "description": "Conflict error",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "details": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": ["message"]
+            }
+        },
+        "UnprocessableEntityError": {
+            "description": "Unprocessable entity error",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "details": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": ["message", "details"]
+            }
+        }
+    }
+}
