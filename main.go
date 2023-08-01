@@ -44,6 +44,7 @@ func main() {
 
 		repositories.Module,
 		services.Module,
+		handlers.Module,
 	).Run()
 }
 
