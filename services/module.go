@@ -8,4 +8,6 @@ import (
 
 var Module = fx.Provide(
 	repositories.NewAccountRepository,
+	repositories.NewOperationTypeRepository,
+	repositories.NewTransactionRepository,
 )

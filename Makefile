@@ -13,6 +13,8 @@ pre-test:
 pre-test-build:
 	rm -rf mocks
 	mockgen -source=./repositories/account_repository.go -destination=./mocks/repositories/account_repository.go
+	mockgen -source=./repositories/operation_type_repository.go -destination=./mocks/repositories/operation_type_repository.go
+	mockgen -source=./repositories/transaction_repository.go -destination=./mocks/repositories/transaction_repository.go
 	mockgen -source=./services/account_service.go -destination=./mocks/services/account_service.go
 
 test:
