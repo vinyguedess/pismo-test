@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"pismo/handlers"
 	"pismo/repositories"
+	"pismo/services"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -42,6 +43,7 @@ func main() {
 		fx.Invoke(func(*http.Server) {}),
 
 		repositories.Module,
+		services.Module,
 	).Run()
 }
 
