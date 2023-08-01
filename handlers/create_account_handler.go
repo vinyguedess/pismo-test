@@ -55,6 +55,6 @@ func (h *createAccountHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	w.Header().Set("ETag", account.ID.String())
-	w.Header().Set("Location", fmt.Sprintf("/accounts/%s", account.ID.String()))
+	w.Header().Set("ETag", fmt.Sprint(account.ID))
+	w.Header().Set("Location", fmt.Sprintf("/accounts/%d", account.ID))
 }

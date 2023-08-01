@@ -34,12 +34,12 @@ func NewAccountAlreadyExistsError(
 type ItemNotFoundError struct{ *baseErrors }
 
 func NewItemNotFoundError(
-	item string, id string,
+	item string, id int,
 ) *ItemNotFoundError {
 	return &ItemNotFoundError{
 		baseErrors: &baseErrors{
 			Message: fmt.Sprintf("%s not found", item),
-			Details: []string{item, id},
+			Details: []string{item, fmt.Sprint(id)},
 		},
 	}
 }

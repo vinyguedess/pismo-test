@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 
 	"pismo/entities"
@@ -44,7 +43,7 @@ func (s *createAccountHandlerTestSuite) TestMethod() {
 }
 
 func (s *createAccountHandlerTestSuite) TestServeHTTP() {
-	accountId := uuid.New()
+	accountId := 1
 	account := &models.Account{
 		BaseModel: models.BaseModel{
 			ID: accountId,
@@ -108,8 +107,8 @@ func (s *createAccountHandlerTestSuite) TestServeHTTP() {
 			if test.responseCreate == nil {
 				s.Equal(test.expectedResponse, response.Body.String())
 			} else {
-				s.Equal(accountId.String(), response.Header().Get("ETag"))
-				s.Equal(fmt.Sprintf("/accounts/%s", accountId.String()), response.Header().Get("Location"))
+				s.Equal(fmt.Sprint(accountId), response.Header().Get("ETag"))
+				s.Equal(fmt.Sprintf("/accounts/%d", accountId), response.Header().Get("Location"))
 			}
 		})
 	}

@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -72,7 +71,6 @@ func (s *accountRepositoryTestSuite) TestCreate() {
 
 			insertQuery := s.dbmock.ExpectExec("INSERT INTO `accounts`").WithArgs(
 				sqlmock.AnyArg(),
-				sqlmock.AnyArg(),
 				"123456789",
 			)
 			if test.insertQueryError != nil {
@@ -98,7 +96,7 @@ func (s *accountRepositoryTestSuite) TestCreate() {
 }
 
 func (s *accountRepositoryTestSuite) TestFindByID() {
-	accountId := uuid.New()
+	accountId := 1
 
 	tests := []struct {
 		description  string
@@ -126,7 +124,7 @@ func (s *accountRepositoryTestSuite) TestFindByID() {
 				regexp.QuoteMeta(
 					"SELECT * FROM `accounts` WHERE id = ? ORDER BY `accounts`.`id` LIMIT 1",
 				),
-			).WithArgs(accountId.String())
+			).WithArgs(accountId)
 			if test.errorInQuery != nil {
 				expectedQuery.WillReturnError(test.errorInQuery)
 			} else if test.isNotFound {
@@ -139,7 +137,7 @@ func (s *accountRepositoryTestSuite) TestFindByID() {
 				)
 			}
 
-			account, err := s.repository.FindByID(s.ctx, accountId.String())
+			account, err := s.repository.FindByID(s.ctx, accountId)
 			if test.errorInQuery != nil {
 				s.Error(err)
 				s.ErrorContains(err, "error in query")
@@ -156,7 +154,7 @@ func (s *accountRepositoryTestSuite) TestFindByID() {
 }
 
 func (s *accountRepositoryTestSuite) TestFindByDocumentNumber() {
-	accountId := uuid.New()
+	accountId := 1
 
 	tests := []struct {
 		description  string

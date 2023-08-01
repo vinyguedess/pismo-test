@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -32,7 +31,7 @@ func (s *accountServiceTestSuite) SetupTest() {
 }
 
 func (s *accountServiceTestSuite) TestCreate() {
-	accountId := uuid.New()
+	accountId := 1
 	account := &models.Account{
 		BaseModel:      models.BaseModel{ID: accountId},
 		DocumentNumber: "123456789",
@@ -102,7 +101,7 @@ func (s *accountServiceTestSuite) TestCreate() {
 }
 
 func (s *accountServiceTestSuite) TestFindByID() {
-	accountId := uuid.New()
+	accountId := 1
 	account := &models.Account{
 		BaseModel: models.BaseModel{ID: accountId},
 	}
@@ -132,10 +131,10 @@ func (s *accountServiceTestSuite) TestFindByID() {
 			ctx := context.Background()
 
 			s.accountRepositoryMock.EXPECT().
-				FindByID(ctx, accountId.String()).
+				FindByID(ctx, accountId).
 				Return(test.responseFindById, test.errFindById)
 
-			account, err := s.service.FindByID(ctx, accountId.String())
+			account, err := s.service.FindByID(ctx, accountId)
 			if test.errFindById != nil {
 				s.Error(err)
 				s.ErrorContains(err, test.errFindById.Error())
