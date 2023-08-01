@@ -9,6 +9,7 @@ import (
 
 type AccountRepository interface {
 	Create(ctx context.Context, data models.Account) (*models.Account, error)
+	FindByID(ctx context.Context, accountId string) (*models.Account, error)
 	FindByDocumentNumber(ctx context.Context, documentNumber string) (*models.Account, error)
 }
 
@@ -27,6 +28,23 @@ func (r *accountRepository) Create(ctx context.Context, data models.Account) (*m
 	}
 
 	return &data, nil
+}
+
+func (r *accountRepository) FindByID(ctx context.Context, accountId string) (*models.Account, error) {
+	var account models.Account
+	err := r.db.WithContext(ctx).
+		Where("id = ?", accountId).
+		First(&account).
+		Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return &account, nil
 }
 
 func (r *accountRepository) FindByDocumentNumber(

@@ -97,6 +97,64 @@ func (s *accountRepositoryTestSuite) TestCreate() {
 	}
 }
 
+func (s *accountRepositoryTestSuite) TestFindByID() {
+	accountId := uuid.New()
+
+	tests := []struct {
+		description  string
+		isNotFound   bool
+		errorInQuery error
+	}{
+		{
+			description: "Success",
+		},
+		{
+			description: "Not found",
+			isNotFound:  true,
+		},
+		{
+			description:  "Error in query",
+			errorInQuery: errors.New("error in query"),
+		},
+	}
+
+	for _, test := range tests {
+		s.Run(test.description, func() {
+			s.SetupTest()
+
+			expectedQuery := s.dbmock.ExpectQuery(
+				regexp.QuoteMeta(
+					"SELECT * FROM `accounts` WHERE id = ? ORDER BY `accounts`.`id` LIMIT 1",
+				),
+			).WithArgs(accountId.String())
+			if test.errorInQuery != nil {
+				expectedQuery.WillReturnError(test.errorInQuery)
+			} else if test.isNotFound {
+				expectedQuery.WillReturnRows(
+					sqlmock.NewRows([]string{"id", "document_number"}),
+				)
+			} else {
+				expectedQuery.WillReturnRows(
+					sqlmock.NewRows([]string{"id", "document_number"}).AddRow(accountId, "123456789"),
+				)
+			}
+
+			account, err := s.repository.FindByID(s.ctx, accountId.String())
+			if test.errorInQuery != nil {
+				s.Error(err)
+				s.ErrorContains(err, "error in query")
+			} else if test.isNotFound {
+				s.NoError(err)
+				s.Nil(account)
+			} else {
+				s.NoError(err)
+				s.Equal("123456789", account.DocumentNumber)
+				s.NoError(s.dbmock.ExpectationsWereMet())
+			}
+		})
+	}
+}
+
 func (s *accountRepositoryTestSuite) TestFindByDocumentNumber() {
 	accountId := uuid.New()
 
