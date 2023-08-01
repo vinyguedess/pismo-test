@@ -27,8 +27,10 @@ func NewDBConnection(dialector gorm.Dialector) (*gorm.DB, error) {
 			return nil, err
 		}
 
-		if err := db.AutoMigrate(&models.Account{}); err != nil {
+		if err := db.AutoMigrate(&models.Account{}, &models.OperationType{}); err != nil {
 			return nil, err
+		} else {
+			SeedDatabase(db)
 		}
 
 		dbConn = db
