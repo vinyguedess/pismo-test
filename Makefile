@@ -16,6 +16,7 @@ pre-test-build:
 	mockgen -source=./repositories/operation_type_repository.go -destination=./mocks/repositories/operation_type_repository.go
 	mockgen -source=./repositories/transaction_repository.go -destination=./mocks/repositories/transaction_repository.go
 	mockgen -source=./services/account_service.go -destination=./mocks/services/account_service.go
+	mockgen -source=./services/transaction_service.go -destination=./mocks/services/transaction_service.go
 
 test:
 	make pre-test

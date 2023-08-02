@@ -87,6 +87,8 @@ func (s *accountGetByIdHandlerTestSuite) TestServeHTTP() {
 
 	for _, test := range tests {
 		s.Run(test.description, func() {
+			s.SetupTest()
+
 			request := mux.SetURLVars(
 				httptest.NewRequest(http.MethodGet, fmt.Sprintf("/accounts/%d", accountId), nil),
 				map[string]string{"id": fmt.Sprintf("%d", accountId)},
