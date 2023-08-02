@@ -19,13 +19,18 @@ func seedOperationTypes(db *gorm.DB) {
 		common.Payment,
 	}
 
-	for _, operationType := range operationTypes {
+	for _, operationTypeDesc := range operationTypes {
 		var operationTypeTotal int64
-		db.Model(&models.OperationType{}).Where("description = ?").Count(&operationTypeTotal)
+		db.Model(&models.OperationType{}).
+			Where("description = ?", operationTypeDesc).
+			Count(&operationTypeTotal)
 		if operationTypeTotal > 0 {
 			continue
 		}
 
-		db.Create(&operationType)
+		operationType := &models.OperationType{
+			Description: operationTypeDesc,
+		}
+		db.Create(operationType)
 	}
 }
