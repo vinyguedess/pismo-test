@@ -36,6 +36,8 @@ func main() {
 
 			AsRoute(handlers.NewHealthcheckHandler),
 			AsRoute(handlers.NewAccountCreateHandler),
+			AsRoute(handlers.NewAccountGetByIDHandler),
+			AsRoute(handlers.NewTransactionCreateHandler),
 		),
 		fx.WithLogger(
 			func(log *zap.Logger) fxevent.Logger {
