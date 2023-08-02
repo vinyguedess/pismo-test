@@ -10,25 +10,25 @@ import (
 	"pismo/services"
 )
 
-type createAccountHandler struct {
+type accountCreateHandler struct {
 	accountService services.AccountService
 }
 
-func NewCreateAccountHandler(accountService services.AccountService) Handler {
-	return &createAccountHandler{
+func NewAccountCreateHandler(accountService services.AccountService) Handler {
+	return &accountCreateHandler{
 		accountService: accountService,
 	}
 }
 
-func (h *createAccountHandler) Route() string {
+func (h *accountCreateHandler) Route() string {
 	return "/accounts"
 }
 
-func (h *createAccountHandler) Method() []string {
+func (h *accountCreateHandler) Method() []string {
 	return []string{http.MethodPost}
 }
 
-func (h *createAccountHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *accountCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var payload models.Account
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)

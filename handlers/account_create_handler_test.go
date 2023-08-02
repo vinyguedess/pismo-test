@@ -31,7 +31,7 @@ func TestCreateAccountHandlerTestSuite(t *testing.T) {
 func (s *createAccountHandlerTestSuite) SetupTest() {
 	s.ctrl = gomock.NewController(s.T())
 	s.authServiceMock = mock_services.NewMockAccountService(s.ctrl)
-	s.handler = NewCreateAccountHandler(s.authServiceMock)
+	s.handler = NewAccountCreateHandler(s.authServiceMock)
 }
 
 func (s *createAccountHandlerTestSuite) TestRoute() {
