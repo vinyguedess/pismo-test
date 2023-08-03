@@ -49,6 +49,83 @@
                     }
                 }
             }
+        },
+        "/accounts/{account_id}": {
+            "get": {
+                "summary": "Get account by ID",
+                "description": "Get account information by ID",
+                "tags": ["Accounts"],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "account_id",
+                        "in": "path",
+                        "type": "integer",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved account",
+                        "schema": {
+                            "$ref": "#/definitions/Account"
+                        }
+                    },
+                    "404": {
+                        "description": "Account not found",
+                        "$ref": "#/responses/NotFoundError"
+                    }
+                }
+            }
+        },
+        "/transactions": {
+            "post": {
+                "summary": "Create transaction",
+                "description": "Create transaction for an account",
+                "tags": ["Transactions"],
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/CreateTransactionPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created transaction",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Created transaction ID"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid transaction",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                },
+                                "details": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": ["message", "details"]
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/responses/UnprocessableEntityError"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -60,9 +137,54 @@
                 }
             },
             "required": ["document_number"]
+        },
+        "CreateTransactionPayload": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "type": "integer"
+                },
+                "operation_type_id": {
+                    "type": "integer"
+                },
+                "amount": {
+                    "type": "number"
+                }
+            },
+            "required": ["account_id", "operation_type_id", "amount"]
+        },
+        "Account": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "document_number": {
+                    "type": "string"
+                }
+            },
+            "required": ["id", "document_number"]
         }
     },
     "responses": {
+        "NotFoundError": {
+            "description": "Not found error",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "details": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": ["message", "details"]
+            }
+        },
         "ConflictError": {
             "description": "Conflict error",
             "schema": {

@@ -81,7 +81,7 @@ func (s *transactionCreateHandlerTestSuite) TestServeHTTP() {
 				AccountID: 1, OperationTypeID: 1, Amount: 100.0,
 			},
 			errorCreate:        entities.NewItemNotFoundError("Account", 1),
-			expectedStatusCode: http.StatusNotFound,
+			expectedStatusCode: http.StatusBadRequest,
 			expectedResponse:   `{"message":"Account not found","details":["Account","1"]}`,
 		},
 		{

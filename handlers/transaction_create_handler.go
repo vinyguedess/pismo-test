@@ -45,7 +45,7 @@ func (h *transactionCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Requ
 	if err != nil {
 		switch err.(type) {
 		case *entities.ItemNotFoundError:
-			w.WriteHeader(http.StatusNotFound)
+			w.WriteHeader(http.StatusBadRequest)
 		default:
 			w.WriteHeader(http.StatusInternalServerError)
 			err = entities.NewError("Internal server error", []string{err.Error()})
